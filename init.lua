@@ -159,6 +159,8 @@ vim.opt.scrolloff = 10
 
 vim.opt.tabstop = 4
 
+vim.opt.spell = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
