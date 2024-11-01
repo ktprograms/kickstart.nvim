@@ -93,6 +93,14 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
+-- vim.keymap.set('v', 'g<C-a>', function()
+--   vim.notify(vim.inspect {
+--     vim.fn.mode(true),
+--     vim.v.count, -- FIXME: Look, v.count is 0 with which-key...
+--     vim.v.prevcount,
+--   })
+-- end)
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -288,6 +296,7 @@ require('lazy').setup({
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
+    dir = '~/Documents/GitMisc/which-key.nvim/',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
       require('which-key').setup {
