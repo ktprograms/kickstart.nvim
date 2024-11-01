@@ -1094,6 +1094,23 @@ require('lazy').setup({
   { 'ethanholz/nvim-lastplace', opts = {} },
 
   {
+    'NeogitOrg/neogit',
+    dir = '~/Documents/GitMisc/neogit/',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'sindrets/diffview.nvim',
+      'nvim-telescope/telescope.nvim',
+    },
+    opts = {
+      graph_style = 'unicode',
+    },
+    config = function(_, opts)
+      require('neogit').setup(opts)
+      vim.keymap.set('n', '<leader>gs', require('neogit').open, { desc = '[G]it [S]tatus' })
+    end,
+  },
+
+  {
     'ThePrimeagen/harpoon',
     branch = 'harpoon2',
     dependencies = { 'nvim-lua/plenary.nvim' },
