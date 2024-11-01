@@ -959,6 +959,10 @@ require('lazy').setup({
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
+
+      if not vim.g.have_nerd_font then
+        require('mini.icons').setup { style = 'ascii' }
+      end
     end,
   },
   { -- Highlight, edit, and navigate code
