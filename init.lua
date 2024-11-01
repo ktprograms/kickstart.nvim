@@ -161,6 +161,8 @@ vim.opt.tabstop = 4
 
 vim.opt.spell = true
 
+vim.opt.nrformats:append 'alpha'
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
