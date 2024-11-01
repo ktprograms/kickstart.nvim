@@ -971,6 +971,29 @@ require('lazy').setup({
       end)
     end,
   },
+  {
+    'echasnovski/mini.files',
+    dir = '~/Documents/GitMisc/mini.files/',
+    config = function()
+      require('mini.files').setup {
+        windows = {
+          preview = true,
+        },
+        opener_filetypes = { -- TODO: Defaults
+          pdf = {},
+          png = {},
+          -- TODO: Auto combining thingy (also for markdown/md)
+          -- Use mime types?
+          -- `include_similar = false` to turn off?
+          jpg = {},
+          jpeg = {},
+        },
+      }
+      vim.keymap.set('n', '-', function()
+        if not require('mini.files').close() then
+          require('mini.files').open(vim.api.nvim_buf_get_name(0))
+        end
+      end, { desc = 'File explorer' })
     end,
   },
   { -- Highlight, edit, and navigate code
