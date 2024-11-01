@@ -1041,6 +1041,41 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'synaptiko/xit.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    ft = 'xit',
+    config = function()
+      require('xit').setup()
+
+      local jumpable = { 'open_task', 'ongoing_task', 'in_question_task' }
+
+      local map = function(keys, func, desc)
+        vim.keymap.set('n', keys, func, { buffer = true, silent = true, desc = 'xit: ' .. desc })
+      end
+
+      map('<C-n>', function()
+        require('xit').jump_to_next_task(true, jumpable)
+      end, 'Next task')
+      map('<C-p>', function()
+        require('xit').jump_to_previous_task(true, jumpable)
+      end, 'Previous task')
+      map('<leader>n', function()
+        require('xit').jump_to_next_headline(true)
+      end, 'Next heading')
+      map('<leader>p', function()
+        require('xit').jump_to_previous_headline(true)
+      end, 'Previous heading')
+      map('<C-t>', function()
+        require('xit').toggle_checkbox(false)
+      end, 'Toggle checkbox')
+      map('<M-CR>', function()
+        require('xit').create_new_task(false)
+      end, 'New task')
+      map('<leader>x', require('xit').delete_task, 'Delete Task')
+      vim.keymap.set('i', '<M-CR>', require('xit').create_new_task_in_insert_mode, { buffer = true, silent = true, desc = 'New task' })
+    end,
+  },
 
   {
     'ThePrimeagen/harpoon',
