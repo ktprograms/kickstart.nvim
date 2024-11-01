@@ -524,6 +524,16 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'mbbill/undotree',
+    config = function()
+      vim.keymap.set('n', '<leader>u', function()
+        vim.cmd.UndotreeShow()
+        vim.cmd.UndotreeFocus()
+      end, { desc = '[U]ndotree' })
+    end,
+  },
+
   -- LSP Plugins
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
