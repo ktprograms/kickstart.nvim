@@ -342,11 +342,13 @@ require('lazy').setup({
       require('which-key').add {
         { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
         { '<leader>d', group = '[D]ocument' },
-        { '<leader>r', group = '[R]ename' },
+        { '<leader>g', group = '[G]it' },
+        { '<leader>r', group = '[R]ename/[R]EST' },
         { '<leader>s', group = '[S]earch' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>h', group = '[H]arpoon', mode = { 'n' } },
+        -- { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- TODO: Add
       }
     end,
   },
