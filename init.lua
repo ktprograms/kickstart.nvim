@@ -383,6 +383,27 @@ require('lazy').setup({
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+
+      -- FIXME: Move back out?
+      -- Highlight todo, notes, etc in comments
+      {
+        'folke/todo-comments.nvim',
+        event = 'VimEnter',
+        opts = {
+          signs = vim.g.have_nerd_font,
+          keywords = { TEST = { icon = '󰩐' } },
+        },
+        config = function(_, opts)
+          require('todo-comments').setup(opts)
+          vim.keymap.set('n', ']t', function()
+            require('todo-comments').jump_next()
+          end, { desc = 'Next [T]odo' })
+
+          vim.keymap.set('n', '[t', function()
+            require('todo-comments').jump_prev()
+          end, { desc = 'Previous [T]odo' })
+        end,
+      },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -420,12 +441,14 @@ require('lazy').setup({
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
           },
+          ['todo-comments'] = {},
         },
       }
 
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
+      pcall(require('telescope').load_extension, 'todo-comments')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
@@ -462,6 +485,11 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
+
+      -- Telescope non-builtins
+      vim.keymap.set('n', '<leader>st', function()
+        require('telescope').extensions['todo-comments'].todo()
+      end, { desc = '[S]earch [T]odos' })
     end,
   },
 
@@ -862,9 +890,6 @@ require('lazy').setup({
       vim.cmd.hi 'Comment gui=none'
     end,
   },
-
-  -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
