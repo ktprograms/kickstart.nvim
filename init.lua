@@ -168,6 +168,8 @@ vim.o.confirm = true
 
 vim.opt.tabstop = 4
 
+vim.opt.spell = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
