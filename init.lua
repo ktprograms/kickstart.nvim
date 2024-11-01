@@ -1032,6 +1032,14 @@ require('lazy').setup({
       if not vim.g.have_nerd_font then
         require('mini.icons').setup { style = 'ascii' }
       end
+
+      require('mini.misc').setup_auto_root({
+        '.git',
+      }, function(path)
+        return vim.fs.dirname(path)
+      end)
+    end,
+  },
     end,
   },
   { -- Highlight, edit, and navigate code
