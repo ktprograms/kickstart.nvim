@@ -456,7 +456,7 @@ require('lazy').setup({
           -- Jump to the definition of the word under your cursor.
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-t>.
-          map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+          map('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
 
           -- Find references for the word under your cursor.
           map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -565,6 +565,11 @@ require('lazy').setup({
         },
         cssls = {},
 
+        templ = {},
+        htmx = {
+          filetypes = { 'html', 'templ' },
+        },
+
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -661,6 +666,7 @@ require('lazy').setup({
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
         swift = { 'swiftformat' },
+        templ = { 'templ' },
       },
     },
   },
@@ -996,6 +1002,13 @@ require('lazy').setup({
       } }
       vim.g.vimwiki_valid_html_tags = 'b,i,s,u,sub,sup,kbd,br,hr,span'
     end,
+  },
+
+  {
+    'catgoose/templ-goto-definition',
+    ft = { 'go' },
+    opts = {},
+    dependencies = 'nvim-treesitter/nvim-treesitter',
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
