@@ -626,6 +626,11 @@ require('lazy').setup({
         },
         cssls = {},
 
+        templ = {},
+        htmx = {
+          filetypes = { 'html', 'templ' },
+        },
+
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -731,6 +736,7 @@ require('lazy').setup({
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
         swift = { 'swiftformat' },
+        templ = { 'templ' },
       },
     },
   },
@@ -1058,6 +1064,13 @@ require('lazy').setup({
       } }
       vim.g.vimwiki_valid_html_tags = 'b,i,s,u,sub,sup,kbd,br,hr,span'
     end,
+  },
+
+  {
+    'catgoose/templ-goto-definition',
+    ft = { 'go' },
+    opts = {},
+    dependencies = 'nvim-treesitter/nvim-treesitter',
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
