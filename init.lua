@@ -1043,6 +1043,18 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>hf', function()
         harpoon:list():select(4)
       end)
+      vim.keymap.set('n', '<leader>hj', function()
+        harpoon:list():select(5)
+      end)
+      vim.keymap.set('n', '<leader>hk', function()
+        harpoon:list():select(6)
+      end)
+      vim.keymap.set('n', '<leader>hl', function()
+        harpoon:list():select(7)
+      end)
+      vim.keymap.set('n', '<leader>h;', function()
+        harpoon:list():select(8)
+      end)
     end,
   },
 
