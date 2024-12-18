@@ -858,7 +858,7 @@ require('lazy').setup({
       }
 
       -- Load the colorscheme here.
-      vim.cmd.colorscheme 'nightfox'
+      vim.cmd.colorscheme 'duskfox'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
