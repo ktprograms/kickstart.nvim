@@ -573,6 +573,8 @@ require('lazy').setup({
           filetypes = { 'html', 'templ' },
         },
 
+        rust_analyzer = {},
+
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
