@@ -827,7 +827,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       vim.cmd.colorscheme 'duskfox'
 
-      vim.cmd.hi 'LineNr guifg=#b382ef'
+      vim.cmd.hi 'LineNr guifg=#9774c3' -- rebeccapurple as OKLCH 70% L 0.12 C
     end,
   },
 
