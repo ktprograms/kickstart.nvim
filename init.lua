@@ -705,6 +705,19 @@ require('lazy').setup({
           --   end,
           -- },
         },
+        config = function()
+          local ls = require 'luasnip'
+          local s = ls.snippet
+          local t = ls.text_node
+          local i = ls.insert_node
+          ls.add_snippets('go', {
+            s('iet', {
+              t { 'if err != nil {', '\t' },
+              i(1),
+              t { '', '}' },
+            }),
+          })
+        end,
       },
       'saadparwaiz1/cmp_luasnip',
 
@@ -766,9 +779,11 @@ require('lazy').setup({
           --
           -- <c-l> will move you to the right of each of the expansion locations.
           -- <c-h> is similar, except moving you backwards.
-          ['<C-l>'] = cmp.mapping(function()
+          ['<Tab>'] = cmp.mapping(function()
             if luasnip.expand_or_locally_jumpable() then
               luasnip.expand_or_jump()
+            else
+              vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Tab>', true, false, true), 'n', false)
             end
           end, { 'i', 's' }),
           ['<C-h>'] = cmp.mapping(function()
