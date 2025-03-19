@@ -777,7 +777,19 @@ require('lazy').setup({
           --   end,
           -- },
         },
-        opts = {},
+        config = function()
+          local ls = require 'luasnip'
+          local s = ls.snippet
+          local t = ls.text_node
+          local i = ls.insert_node
+          ls.add_snippets('go', {
+            s('iet', {
+              t { 'if err != nil {', '\t' },
+              i(1),
+              t { '', '}' },
+            }),
+          })
+        end,
       },
       'folke/lazydev.nvim',
     },
