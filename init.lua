@@ -1011,7 +1011,18 @@ require('lazy').setup({
     dir = '~/Documents/GitMisc/neogit/',
     dependencies = {
       'nvim-lua/plenary.nvim',
-      'sindrets/diffview.nvim',
+      {
+        'sindrets/diffview.nvim',
+        opts = {
+          keymaps = {
+            view = {
+              ['q'] = function()
+                require('diffview.config').actions.close()
+              end,
+            },
+          },
+        },
+      },
       'nvim-telescope/telescope.nvim',
     },
     opts = {
