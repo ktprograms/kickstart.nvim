@@ -793,6 +793,25 @@ require('lazy').setup({
               t { '', '}' },
             }),
           })
+          ls.add_snippets('templ', {
+            s('if', {
+              t { 'if ' },
+              i(2),
+              t { ' {', '\t' },
+              i(1),
+              t { '', '}' },
+            }),
+            s('{', {
+              t { '{ ' },
+              i(1),
+              t { ' }' },
+            }),
+            s('{{', {
+              t { '{{ ' },
+              i(1),
+              t { ' }}' },
+            }),
+          })
         end,
       },
       'folke/lazydev.nvim',
