@@ -702,6 +702,10 @@ require('lazy').setup({
       require('lspconfig').ccls.setup {}
       -- nix lsp
       require('lspconfig').nixd.setup {}
+
+      require('lspconfig').hls.setup {
+        filetypes = { 'haskell', 'lhaskell', 'cabal' },
+      }
     end,
   },
 
