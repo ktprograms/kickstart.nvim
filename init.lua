@@ -370,6 +370,17 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
+      vim.keymap.set('n', '<leader>ds', function()
+        if vim.bo.filetype == 'sql' then
+          builtin.current_buffer_fuzzy_find {
+            default_text = '-- name:',
+            tiebreak = function(current, existing)
+              return current.lnum < existing.lnum
+            end,
+          }
+        end
+      end, { desc = 'SQLC Queries' })
+
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
