@@ -651,9 +651,6 @@ require('lazy').setup({
         cssls = {},
 
         templ = {},
-        htmx = {
-          filetypes = { 'html', 'templ' },
-        },
 
         rust_analyzer = {},
 
