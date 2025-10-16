@@ -699,13 +699,13 @@ require('lazy').setup({
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+            vim.lsp.config(server_name, server)
           end,
         },
       }
 
       -- Swift LSP
-      require('lspconfig').sourcekit.setup {
+      vim.lsp.config('sourcekit', {
         capabilities = {
           workspace = {
             didChangeWatchedFiles = {
@@ -713,15 +713,19 @@ require('lazy').setup({
             },
           },
         },
-      }
+      })
+      vim.lsp.enable 'sourcekit'
       -- ccls
-      require('lspconfig').ccls.setup {}
+      vim.lsp.config('ccls', {})
+      vim.lsp.enable 'ccls'
       -- nix lsp
-      require('lspconfig').nixd.setup {}
+      vim.lsp.config('nixd', {})
+      vim.lsp.enable 'nixd'
 
-      require('lspconfig').hls.setup {
+      vim.lsp.config('hls', {
         filetypes = { 'haskell', 'lhaskell', 'cabal' },
-      }
+      })
+      vim.lsp.enable 'hls'
     end,
   },
 
