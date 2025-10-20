@@ -144,6 +144,10 @@ vim.keymap.set('n', 'N', 'Nzzzv')
 
 vim.keymap.set('n', 'ZZ', ':w<CR>')
 
+-- Fix: https://github.com/nvim-mini/mini.nvim/commit/fbb6ad02871d296fc7d3ebd453e1be89b1210f68
+vim.keymap.set('n', 's', 'cl')
+vim.keymap.set('v', 's', 'c')
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
