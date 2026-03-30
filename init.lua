@@ -147,6 +147,13 @@ vim.keymap.set('n', 'ZZ', ':w<CR>')
 -- Fix: https://github.com/nvim-mini/mini.nvim/commit/fbb6ad02871d296fc7d3ebd453e1be89b1210f68
 vim.keymap.set('n', 's', 'cl')
 vim.keymap.set('v', 's', 'c')
+-- Fix: vim-wordmotion g prefix + ge keybinding
+vim.keymap.set('n', 'gg', 'gg')
+
+-- MacOS Alt-Keys
+vim.keymap.set('i', '<M-7>', '<C-k>PI')
+vim.keymap.set('i', '<M-8>', '<C-k>oo')
+vim.keymap.set('i', '<M-->', '<C-k>-M')
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -365,7 +372,9 @@ require('lazy').setup({
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>sf', function()
+        builtin.find_files { hidden = true }
+      end, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -658,6 +667,8 @@ require('lazy').setup({
 
         rust_analyzer = {},
 
+        tinymist = {},
+
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -717,6 +728,7 @@ require('lazy').setup({
             },
           },
         },
+        cmd = { 'sourcekit-lsp', '-Xswiftc', '-enable-bare-slash-regex' },
       })
       vim.lsp.enable 'sourcekit'
       -- ccls
@@ -836,6 +848,57 @@ require('lazy').setup({
               t { ' }}' },
             }),
           })
+          ls.add_snippets('gedcom', {
+            s('i', {
+              t { '0 @I' },
+              i(1),
+              t { '@ INDI', '\t1 NAME ' },
+              i(2),
+              t { '', '\t1 SEX ' },
+              i(3),
+              t { '', '\t1 FAM' },
+              i(4),
+              t { ' @F' },
+              i(5),
+              t { '@', '' },
+            }),
+            s('f', {
+              t { '0 @F' },
+              i(1),
+              t { '@ FAM', '\t' },
+            }),
+            s('h', {
+              t { '1 HUSB @I' },
+              i(1),
+              t { '@', '' },
+            }),
+            s('w', {
+              t { '1 WIFE @I' },
+              i(1),
+              t { '@', '' },
+            }),
+            s('c', {
+              t { '1 CHIL @I' },
+              i(1),
+              t { '@', '' },
+            }),
+            s('np', {
+              t { '1 NOTE Picture ' },
+              i(1),
+              t { '', '' },
+            }),
+            s('nl', {
+              t { '\t1 NOTE Luar', '' },
+            }),
+            s('fs', {
+              t { '\t1 FAMS @F' },
+              i(1),
+              t { '@', '' },
+            }),
+            s('d', {
+              t { '\t1 DEAT', '\t\t2 DATE BEF 21 DEC 2024', '' },
+            }),
+          })
         end,
       },
       'folke/lazydev.nvim',
@@ -868,6 +931,7 @@ require('lazy').setup({
         preset = 'default',
 
         ['<C-s>'] = { 'select_and_accept' },
+        ['<C-k>'] = {},
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -1154,6 +1218,9 @@ require('lazy').setup({
         auto_toc = 1,
       } }
       vim.g.vimwiki_valid_html_tags = 'b,i,s,u,sub,sup,kbd,br,hr,span'
+      vim.g.vimwiki_key_mappings = {
+        headers = 0,
+      }
     end,
   },
 
@@ -1166,7 +1233,12 @@ require('lazy').setup({
 
   'tpope/vim-abolish',
 
-  'chaoren/vim-wordmotion',
+  {
+    'chaoren/vim-wordmotion',
+    init = function()
+      vim.g.wordmotion_prefix = 'g'
+    end,
+  },
 
   {
     'norcalli/nvim-colorizer.lua',
@@ -1175,11 +1247,21 @@ require('lazy').setup({
     end,
   },
 
+  'kamalsacranie/nvim-mapper',
+
   {
     'ruifm/gitlinker.nvim',
     config = function()
       require('gitlinker').setup()
     end,
+  },
+
+  'cfdrake/vim-pbxproj',
+
+  {
+    'chomosuke/typst-preview.nvim',
+    ft = 'typst',
+    opts = {},
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
