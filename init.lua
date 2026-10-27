@@ -200,17 +200,64 @@ require('lazy').setup({
 
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    },
+    config = function()
+      require('gitsigns').setup {
+        signs = {
+          add = { text = '+' },
+          change = { text = '~' },
+          delete = { text = '_' },
+          topdelete = { text = '‾' },
+          changedelete = { text = '~' },
+        },
+        on_attach = function(bufnr)
+          local gitsigns = require 'gitsigns'
+
+          local function map(mode, l, r, opts)
+            opts = opts or {}
+            opts.buffer = bufnr
+            vim.keymap.set(mode, l, r, opts)
+          end
+
+          -- Navigation
+          map('n', ']c', function()
+            if vim.wo.diff then
+              vim.cmd.normal { ']c', bang = true }
+            else
+              gitsigns.nav_hunk 'next'
+            end
+          end)
+
+          map('n', '[c', function()
+            if vim.wo.diff then
+              vim.cmd.normal { '[c', bang = true }
+            else
+              gitsigns.nav_hunk 'prev'
+            end
+          end)
+
+          map('n', '<leader>hp', gitsigns.preview_hunk)
+          map('n', '<leader>hi', gitsigns.preview_hunk_inline)
+
+          map('n', '<leader>hb', function()
+            gitsigns.blame_line { full = true }
+          end)
+
+          map('n', '<leader>hd', gitsigns.diffthis)
+
+          map('n', '<leader>hD', function()
+            gitsigns.diffthis '~'
+          end)
+
+          map('n', '<leader>hQ', function()
+            gitsigns.setqflist 'all'
+          end)
+          map('n', '<leader>hq', gitsigns.setqflist)
+        end,
+      }
+    end,
   },
 
+  --[[
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     dir = '~/Documents/GitMisc/which-key.nvim/',
@@ -270,6 +317,7 @@ require('lazy').setup({
       },
     },
   },
+  --]]
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
@@ -421,6 +469,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>st', function()
         require('telescope').extensions['todo-comments'].todo()
       end, { desc = '[S]earch [T]odos' })
+      vim.keymap.set('n', '<leader>sT', "<cmd>exec ':TodoTelescope cwd=' . expand('%:h')<CR>")
     end,
   },
 
@@ -742,6 +791,29 @@ require('lazy').setup({
         filetypes = { 'haskell', 'lhaskell', 'cabal' },
       })
       vim.lsp.enable 'hls'
+
+      vim.lsp.config('arduino_language_server', {
+        cmd = {
+          'arduino-language-server',
+          '-cli-config',
+          '~/Library/Arduino15/arduino-cli.yaml',
+          '-clangd',
+          '/run/current-system/sw/bin/clangd',
+          '-cli',
+          '/run/current-system/sw/bin/arduino-cli',
+          '-fqbn',
+          'arduino:avr:nano',
+        },
+      })
+      vim.lsp.enable 'arduino_language_server'
+    end,
+  },
+
+  {
+    'nvim-java/nvim-java',
+    config = function()
+      require('java').setup()
+      vim.lsp.enable 'jdtls'
     end,
   },
 
@@ -994,6 +1066,8 @@ require('lazy').setup({
       vim.cmd.colorscheme 'duskfox'
 
       vim.cmd.hi 'LineNr guifg=#9774c3' -- rebeccapurple as OKLCH 70% L 0.12 C
+
+      vim.cmd.hi 'Normal guibg=NONE'
     end,
   },
 
@@ -1042,11 +1116,18 @@ require('lazy').setup({
       }, function(path)
         return vim.fs.dirname(path)
       end)
+
+      vim.keymap.set('n', '-', function()
+        if not require('mini.files').close() then
+          require('mini.files').open(vim.api.nvim_buf_get_name(0))
+        end
+      end, { desc = 'File explorer' })
     end,
   },
+  --[[
   {
     'echasnovski/mini.files',
-    dir = '~/Documents/GitMisc/mini.files/',
+    -- dir = '~/Documents/GitMisc/mini.files/', -- FIXME: Upstream opener_filetypes feature
     config = function()
       require('mini.files').setup {
         windows = {
@@ -1069,24 +1150,87 @@ require('lazy').setup({
       end, { desc = 'File explorer' })
     end,
   },
+  --]]
+
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    branch = 'main', -- https://github.com/markspace/nvimconfig/commit/ed1ee15545410dc20cf87afc839aa7e6498eb018
+    lazy = false,
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
-    -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
+    config = function()
+      require('nvim-treesitter').setup {
+        auto_install = true,
+        highlight = {
+          enable = true,
+          -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
+          --  If you are experiencing weird indenting issues, add the language to
+          --  the list of additional_vim_regex_highlighting and disabled languages for indent.
+          additional_vim_regex_highlighting = { 'ruby' },
+        },
+        indent = { enable = true, disable = { 'ruby' } },
+      }
+
+      require('nvim-treesitter').install({ 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }):wait(300000) -- wait max. 5 minutes
+
+      --- https://github.com/nvim-lua/kickstart.nvim/blob/8e35dbedb7966e3a95e1f26f9fc1179ab6c68db4/init.lua#L954-L1000
+      ---@param buf integer
+      ---@param language string
+      local function treesitter_try_attach(buf, language)
+        -- Check if the buffer is valid (might not be after install completes)
+        if not vim.api.nvim_buf_is_valid(buf) then
+          return
+        end
+
+        -- Check if a parser exists and load it
+        if not vim.treesitter.language.add(language) then
+          return
+        end
+
+        -- Enable syntax highlighting and other treesitter features
+        vim.treesitter.start(buf, language)
+
+        -- Enable treesitter based folds
+        -- For more info on folds see `:help folds`
+        -- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+        -- vim.wo.foldmethod = 'expr'
+
+        -- Check if treesitter indentation is available for this language, and if so enable it
+        -- in case there is no indent query, the indentexpr will fallback to the vim's built in one
+        local has_indent_query = vim.treesitter.query.get(language, 'indents') ~= nil
+
+        -- Enable treesitter based indentation
+        if has_indent_query then
+          vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
+      end
+
+      local available_parsers = require('nvim-treesitter').get_available()
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function(args)
+          local buf, filetype = args.buf, args.match
+
+          local language = vim.treesitter.language.get_lang(filetype)
+          if not language then
+            return
+          end
+
+          local installed_parsers = require('nvim-treesitter').get_installed 'parsers'
+
+          if vim.tbl_contains(installed_parsers, language) then
+            -- Enable the parser if it is already installed
+            treesitter_try_attach(buf, language)
+          elseif vim.tbl_contains(available_parsers, language) then
+            -- If a parser is available in `nvim-treesitter`, auto-install it and enable it after the installation is done
+            require('nvim-treesitter').install(language):await(function()
+              treesitter_try_attach(buf, language)
+            end)
+          else
+            -- Try to enable treesitter features in case the parser exists but is not available from `nvim-treesitter`
+            treesitter_try_attach(buf, language)
+          end
+        end,
+      })
+    end,
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
     --
@@ -1099,7 +1243,6 @@ require('lazy').setup({
 
   {
     'NeogitOrg/neogit',
-    dir = '~/Documents/GitMisc/neogit/',
     dependencies = {
       'nvim-lua/plenary.nvim',
       {
@@ -1203,6 +1346,22 @@ require('lazy').setup({
 
   {
     'rest-nvim/rest.nvim',
+    ft = 'http',
+    build = false,
+    dependencies = {
+      'j-hui/fidget.nvim',
+      'nvim-neotest/nvim-nio',
+      'nvim-treesitter/nvim-treesitter',
+      {
+        -- Lazy.nvim does not recognize this library's rocksfile, so add it
+        -- to package path manually.
+        'manoelcampos/xml2lua',
+        config = function(plugin)
+          package.path = package.path .. ';' .. plugin.dir .. '/?.lua'
+        end,
+      },
+      'lunarmodules/lua-mimetypes',
+    },
     config = function()
       vim.keymap.set('n', '<leader>rr', function()
         vim.cmd.Rest 'run'
@@ -1262,6 +1421,32 @@ require('lazy').setup({
     'chomosuke/typst-preview.nvim',
     ft = 'typst',
     opts = {},
+  },
+
+  {
+    'selimacerbas/mdkite.nvim',
+    -- a kitehost.nvim checkout under another dir name needs its spec to
+    -- say name = "kitehost.nvim", or lazy.nvim clones upstream beside it
+    dependencies = { 'selimacerbas/kitehost.nvim' },
+    -- kitehost.nvim v2.0.0 or newer, the first release with its Host check
+    config = function()
+      require('mdkite').setup {
+        -- all optional; sane defaults shown
+        instance_mode = 'takeover', -- "takeover" (one tab) or "multi" (tab per instance)
+        port = 0, -- 0 = auto (8421 for takeover, OS-assigned for multi)
+        open_browser = true,
+        default_theme = 'dark', -- "dark" or "light"; initial preview theme
+        debounce_ms = 300,
+        filetypes = { 'vimwiki' },
+      }
+    end,
+  },
+
+  {
+    'esmuellert/nvim-eslint',
+    config = function()
+      require('nvim-eslint').setup {}
+    end,
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
