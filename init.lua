@@ -7,14 +7,6 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
--- vim.keymap.set('v', 'g<C-a>', function()
---   vim.notify(vim.inspect {
---     vim.fn.mode(true),
---     vim.v.count, -- FIXME: Look, v.count is 0 with which-key...
---     vim.v.prevcount,
---   })
--- end)
-
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
@@ -225,7 +217,7 @@ require('lazy').setup({
             else
               gitsigns.nav_hunk 'next'
             end
-          end)
+          end, { desc = 'Next [C]hange' })
 
           map('n', '[c', function()
             if vim.wo.diff then
@@ -233,34 +225,28 @@ require('lazy').setup({
             else
               gitsigns.nav_hunk 'prev'
             end
-          end)
+          end, { desc = 'Previous [C]hange' })
 
-          map('n', '<leader>hp', gitsigns.preview_hunk)
-          map('n', '<leader>hi', gitsigns.preview_hunk_inline)
+          map('n', '<leader>hp', gitsigns.preview_hunk, { desc = '[H]unk [P]review' })
+          map('n', '<leader>hi', gitsigns.preview_hunk_inline, { desc = '[H]unk Preview [I]nline' })
 
           map('n', '<leader>hb', function()
             gitsigns.blame_line { full = true }
-          end)
+          end, { desc = '[H]unk [B]lame' })
 
-          map('n', '<leader>hd', gitsigns.diffthis)
-
-          map('n', '<leader>hD', function()
-            gitsigns.diffthis '~'
-          end)
+          map('n', '<leader>hd', gitsigns.diffthis, { desc = '[H]unk [D]iffthis' })
 
           map('n', '<leader>hQ', function()
             gitsigns.setqflist 'all'
-          end)
-          map('n', '<leader>hq', gitsigns.setqflist)
+          end, { desc = '[H]unk [Q]uickfix list (All files)' })
+          map('n', '<leader>hq', gitsigns.setqflist, { desc = '[H]unk [Q]uickfix list' })
         end,
       }
     end,
   },
 
-  --[[
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
-    dir = '~/Documents/GitMisc/which-key.nvim/',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
       -- delay between pressing a key and opening which-key (milliseconds)
@@ -303,6 +289,8 @@ require('lazy').setup({
         },
       },
 
+      preset = 'modern',
+
       -- Document existing key chains
       spec = {
         { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
@@ -312,12 +300,10 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = '[H]arpoon', mode = { 'n' } },
-        -- { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- TODO: Add
+        { '<leader>h', group = '[H]arpoon/[H]unk', mode = { 'n' } },
       },
     },
   },
-  --]]
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
@@ -1313,34 +1299,34 @@ require('lazy').setup({
       harpoon:setup {}
       vim.keymap.set('n', '<leader>a', function()
         harpoon:list():add()
-      end)
+      end, { desc = 'Harpoon: [A]dd' })
       vim.keymap.set('n', '<C-e>', function()
         harpoon.ui:toggle_quick_menu(harpoon:list())
       end)
       vim.keymap.set('n', '<leader>ha', function()
         harpoon:list():select(1)
-      end)
+      end, { desc = 'Harpoon: 1' })
       vim.keymap.set('n', '<leader>hs', function()
         harpoon:list():select(2)
-      end)
+      end, { desc = 'Harpoon: 2' })
       vim.keymap.set('n', '<leader>hd', function()
         harpoon:list():select(3)
-      end)
+      end, { desc = 'Harpoon: 3' })
       vim.keymap.set('n', '<leader>hf', function()
         harpoon:list():select(4)
-      end)
+      end, { desc = 'Harpoon: 4' })
       vim.keymap.set('n', '<leader>hj', function()
         harpoon:list():select(5)
-      end)
+      end, { desc = 'Harpoon: 5' })
       vim.keymap.set('n', '<leader>hk', function()
         harpoon:list():select(6)
-      end)
+      end, { desc = 'Harpoon: 6' })
       vim.keymap.set('n', '<leader>hl', function()
         harpoon:list():select(7)
-      end)
+      end, { desc = 'Harpoon: 7' })
       vim.keymap.set('n', '<leader>h;', function()
         harpoon:list():select(8)
-      end)
+      end, { desc = 'Harpoon: 8' })
     end,
   },
 
